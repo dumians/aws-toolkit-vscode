@@ -13,7 +13,7 @@ import { getAccountId } from '../shared/credentials/accountId'
 import { getLogger } from '../shared/logger'
 import { CredentialsStore } from './credentialsStore'
 import { CredentialsProvider } from './providers/credentialsProvider'
-import { getCredentialsProviderManagerInstance } from './providers/credentialsProviderManager'
+import { CredentialsProviderManager } from './providers/credentialsProviderManager'
 
 export class LoginManager {
     private readonly credentialsStore: CredentialsStore = new CredentialsStore()
@@ -26,7 +26,7 @@ export class LoginManager {
      */
     public async login(credentialsId: string): Promise<void> {
         try {
-            const provider = await getCredentialsProviderManagerInstance().getCredentialsProvider(credentialsId)
+            const provider = await CredentialsProviderManager.getInstance().getCredentialsProvider(credentialsId)
             if (!provider) {
                 throw new Error(`Could not find Credentials Provider for ${credentialsId}`)
             }
@@ -90,7 +90,7 @@ export class LoginManager {
 
     private notifyUserInvalidCredentials(credentialProviderId: string) {
         const getHelp = localize('AWS.message.credentials.invalid.help', 'Get Help...')
-        const viewLogs = localize('AWS.message.credentials.invalid.logs', 'View logs')
+        const viewLogs = localize('AWS.message.credentials.invalid.logs', 'View Logs...')
 
         vscode.window
             .showErrorMessage(
